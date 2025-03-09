@@ -15,7 +15,7 @@ if nargs < 1:
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # read the iuse information from convinfo for conventional observations
 #
-dcInfo  = {}
+dcConvInfo  = {}
 if os.path.exists('convinfo'):
   with open('convinfo','r') as sfile:
       for line in sfile:
@@ -36,9 +36,41 @@ if os.path.exists('convinfo'):
                       'ermin': fields[7],
                       'msgtype': fields[8],
                       }
-                  dcInfo[atype] = dcTMP
+                  dcConvInfo[atype] = dcTMP
               else:
                   print(f"read_convinfo Warning: expected 9 fields\n{line}")
+
+# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# read satinfo
+#
+dcSatInfo  = {}
+if os.path.exists('satinfo'):
+    with open('satinfo','r') as sfile:
+        for line in sfile:
+            if not line.strip().startswith("!"):
+              fields = line.split()
+              if len(fields) == 11:
+                sis = fields[0]  #sensor/instr/sat
+                if sis in dcSatinfo:
+                  dcSIS=dcSatinfo[sis]
+                else:
+                  dcSIS = {'channel':[],'iuse':[],'error':[],'error_cld':[],'ermax':[],
+                      'var_b':[],'var_pg':[],'icld_det':[],'icloud':[],'iaerosol':[],
+                      }
+                #
+                dcSIS['channel'].append(fields[1])
+                dcSIS['iuse'].append(fields[2])
+                dcSIS['error'].append(fields[3])
+                dcSIS['error_cld'].append(fields[4])
+                dcSIS['ermax'].append(fields[5])
+                dcSIS['var_b'].append(fields[6])
+                dcSIS['var_pg'].append(fields[7])
+                dcSIS['icld_det'].append(fields[8])
+                dcSIS['icloud'].append(fields[9])
+                dcSIS['iaerosol'].append(fields[10])
+                dcSatinfo[sis]=dcSIS
+              else:
+                print(f"read_satinfo warning: expected 11 fields\n{line}")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 # generate the final use_obs list
@@ -49,13 +81,13 @@ if os.path.exists('convinfo'):
 if not os.path.exists('data/obs/ioda_adpupa.nc'):
   keys_to_remove = ['t120','q120','ps120','uv220']
   for key in keys_to_remove:
-    dcInfo.pop(key,None) # `None` prevents KeyError if key doesn't exist
+    dcConvInfo.pop(key,None) # `None` prevents KeyError if key doesn't exist
 # add more here if needed
 
 # ~~~~~~~~~~~~~
 # assemble a final obs use list
 obs_list = []
-for key,value in dcInfo.items():
+for key,value in dcConvInfo.items():
   if value['iuse'] == "1":
     obs_list.append(key)
 
