@@ -1,33 +1,11 @@
 # 1. Build
-If running on Orion/Hercules/Gaea, you will need to run `module load git-lfs` before cloning.    
-`git clone -b rrfs-mpas-jedi --recursive https://github.com/NOAA-EMC/rrfs-workflow.git`
-
-`cd rrfs-workflow/sorc` and run the following command to build the system:
+On orion/hercules/gaea, you will need to run `module load git-lfs` first.
 ```
-build.all
+GIT_LFS_SKIP_SMUDGE=1 git clone --recursive https://github.com/NOAA-GSL/GRFS.git
+cd GRFS/sorc
+./build.all
 ```
-
-The above script compiles WPS, MPAS, MPASSIT, RDASApp and UPP simultaneously.  
-Build logs for each component can be found under sorc/:
-```
-log.build.mpas
-log.build.rdas
-log.build.wps
-log.build.mpassit
-log.build.upp
-```
-
-Executables can be found under `exec/`:
-```
-ungrib.x
-init_atmosphere_model.x
-atmosphere_model.x
-mpasjedi_variational.x
-mpasjedi_enkf.x
-bufr2ioda.x
-mpassit.x
-upp.x
-```
+If you run cold start forecasts only and don't need data assimilation, you can `vi build.all` and comment out this line `./build.rdas &> ./log.build.rdas 2>&1 &` before running `./build.all`
 
 # 2. Setup and run experiments:
 ### 2.1. cat/copy and modify exp.setup
