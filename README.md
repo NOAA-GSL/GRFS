@@ -1,6 +1,7 @@
 # GRFS
 
-Global-to-Regional Forecast System
+Global-to-Regional Forecast System    
+_which can run global MPAS+JEDI on top of the rrfs-workflow(MPAS+JEDI)_
 
 ### Currently supported platforms
 -   NOAA RDHPCS Hera
