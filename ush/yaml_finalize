@@ -93,10 +93,10 @@ if os.path.exists('satinfo'):
 if dcConvInfo: # if non empty
     dcOBS={
         'ioda_adpupa.nc': ['t120','q120','ps120','uv220'],
-        'ioda_aircar.nc': ['t133','q133','uv223'],
+        'ioda_aircar.nc': ['t133','q133','uv233'],
         }
     for iodafile, keys_to_remove in dcOBS.items():
-        if not os.path.exists(iodafile):
+        if not os.path.exists(f"data/obs/{iodafile}"):
             for key in keys_to_remove:
                 dcConvInfo.pop(key,None) # `None` prevents KeyError if key doesn't exist
 # ~~~~~~~~~~~~~
@@ -107,7 +107,7 @@ if dcSatInfo: # if non empty
         'ioda_cris-fsr_n20.nc': ['cris-fsr_n20'],
         }
     for iodafile, keys_to_remove in dcOBS.items():
-        if not os.path.exists(iodafile):
+        if not os.path.exists(f"data/obs/{iodafile}"):
             for key in keys_to_remove:
                 dcSatInfo.pop(key,None) # `None` prevents KeyError if key doesn't exist
 
