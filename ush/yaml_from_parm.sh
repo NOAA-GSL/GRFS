@@ -22,4 +22,7 @@ fi
 #  Generate the final YAML configuration file based on convinfo and available ioda files
 #
 ${cpreq} ${EXPDIR}/config/convinfo .
+if [[ -s "${EXPDIR}/config/satinfo" ]]; then
+  cp ${EXPDIR}/config/satinfo .
+fi
 ${USHrrfs}/yaml_finalize ${template}
